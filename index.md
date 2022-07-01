@@ -110,6 +110,7 @@ In addition, it assigns the coordinate axis to all this system to make it use th
 ![Project schematic](https://gdurl.com/KLgM)
 
 # Full code
+
 ```py
 from picamera.array import PiRGBArray     #As there is a resolution problem in raspberry pi, will not be able to capture frames by VideoCapture
 from picamera import PiCamera
