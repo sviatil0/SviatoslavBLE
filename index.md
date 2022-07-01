@@ -26,4 +26,4 @@ I ran into a lot of problems during the process of buying details. I am a Ukrain
 # First Milestone
 During the first milestone I was worling on the image parsing. 
 
-[![First Milestone](https://res.cloudinary.com/marcomontalbano/image/upload/v1612574117/video_to_markdown/images/youtube--CaCazFBhYKs-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=4FLv4QYLK8A&t=135s "First Milestone"){:target="_blank" rel="noopener"}
+[![First Milestone]([https://gdurl.com/OEwo](https://gdurl.com/OEwo))](https://www.youtube.com/watch?v=4FLv4QYLK8A&t=135s "First Milestone"){:target="_blank" rel="noopener"}
