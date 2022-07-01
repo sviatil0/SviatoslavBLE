@@ -8,7 +8,7 @@ In this project I made a robot that is tracking the ball of the specific color.
 ![Headstone Image](https://gdurl.com/0gHQ)
 
 # Demo night presentation 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/KBhEHXrmlh8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/KBhEHXrmlh8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{:target="_blank" rel="noopener"}
 
 # Final Milestone
 To sum up, I want to establish what I have now.
@@ -29,4 +29,4 @@ I ran into a lot of problems during the process of buying details. I am a Ukrain
 # First Milestone
 During the first milestone I was worling on the image parsing. 
 
-[![First Milestone](https://gdurl.com/OEwo)](https://www.youtube.com/watch?v=JHK3ra_gFGU "Second Milestone"){:target="_blank" rel="noopener"}
+<iframe width="560" height="315" src="https://www.youtube.com/embed/4FLv4QYLK8A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{:target="_blank" rel="noopener"}
