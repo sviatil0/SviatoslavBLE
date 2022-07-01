@@ -386,6 +386,7 @@ for image in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
 GPIO.cleanup() #free all the GPIO pins
 ```
+![Project schematic](https://gdurl.com/KLgM)
 | **Quantity & Part Name** | **Part Description** | **Reference Designators** | **Cost** | **Link** |
 |:--:|:--:|:--:|:--:|:--|
 | 1 Screw Driver Kit | Included different screws & screw driver | N/A | $5.94 | https://www.amazon.com/Small-Screwdriver-Set-Mini-Magnetic/dp/B08RYXKJW9/ | 
