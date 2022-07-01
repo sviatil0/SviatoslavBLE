@@ -3,9 +3,9 @@ In this project I made a robot that is tracking the ball of the specific color.
 
 | **Engineer** | **School** | **Area of Interest** | **Grade** |
 |:--:|:--:|:--:|:--:|
-| Sviatoslav Oleksiienko | Maharishi School | Electrical Engineering, Computer science, Programming | Incoming Senior
+| Sviatoslav Oleksiienko | Maharishi School | Software Engineering, Computer science, Programming | Incoming Senior
 
-![Headstone Image](https://bluestampengineering.com/wp-content/uploads/2016/05/improve.jpg)
+![Headstone Image](https://gdurl.com/0gHQ)
   
 # Final Milestone
 To sum up, I want to establish what I have now.
