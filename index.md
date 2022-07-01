@@ -26,4 +26,4 @@ I ran into a lot of problems during the process of buying details. I am a Ukrain
 # First Milestone
 During the first milestone I was worling on the image parsing. 
 
-[![First Milestone]([https://gdurl.com/OEwo](https://gdurl.com/OEwo))](https://www.youtube.com/watch?v=4FLv4QYLK8A&t=135s "First Milestone"){:target="_blank" rel="noopener"}
+[![First Milestone](https://gdurl.com/OEwo)](https://www.youtube.com/watch?v=JHK3ra_gFGU "Second Milestone"){:target="_blank" rel="noopener"}
