@@ -97,7 +97,7 @@ while(1):
         break
 
 cv2.destroyAllWindows()
-'''
+```
 The good question will be: “How exactly the code works”? I will try to explain quickly.
 At first, it takes an image from the Pi Cam, converts it to the HSV color space (which is better for image processing), and makes a mask from it.
 After, it outlines the contours and calculates the area size, which allows me to understand whether it is moving toward the ball.
