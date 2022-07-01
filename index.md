@@ -106,7 +106,285 @@ In addition, it assigns the coordinate axis to all this system to make it use th
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/4FLv4QYLK8A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{:target="_blank" rel="noopener"}
 
-![Project scheme](https://gdurl.com/KLgM)
+![Project schematic](https://gdurl.com/KLgM)
+#Full code
+```py
+from picamera.array import PiRGBArray     #As there is a resolution problem in raspberry pi, will not be able to capture frames by VideoCapture
+from picamera import PiCamera
+import RPi.GPIO as GPIO
+import time
+import cv2
+import cv2 as cv
+import numpy as np
+
+#hardware work
+GPIO.setmode(GPIO.BCM) 
+
+TRIGGER_LEFT = 20      #Left ultrasonic sensor
+ECHO_LEFT = 26
+
+
+TRIGGER_RIGHT = 16      #Right ultrasonic sensor
+ECHO_RIGHT = 19
+
+TRIGGER_FRONT = 12 #Front ultrasonic sensor
+ECHO_FRONT = 6
+
+LEFT_M1= 14  #Left Motor
+LEFT_M2=4
+
+RIGHT_M1=18  #Right Motor
+RIGHT_M2=17
+
+
+# Working with ultrasonic sensors
+GPIO.setup(TRIGGER_LEFT,GPIO.OUT)  # Trigger
+GPIO.setup(ECHO_LEFT,GPIO.IN)      # Echo
+GPIO.setup(TRIGGER_RIGHT,GPIO.OUT)  # Trigger
+GPIO.setup(ECHO_RIGHT,GPIO.IN)
+
+GPIO.output(TRIGGER_LEFT, False)
+GPIO.output(TRIGGER_RIGHT, False)
+
+
+
+def sonar(GPIO_TRIGGER,GPIO_ECHO):
+      start=0
+      stop=0
+
+      GPIO.setup(GPIO_TRIGGER,GPIO.OUT)  # Trigger
+      GPIO.setup(GPIO_ECHO,GPIO.IN)      # Echo
+     
+      GPIO.output(GPIO_TRIGGER, False)
+     
+      time.sleep(0.01)
+           
+      GPIO.output(GPIO_TRIGGER, True)
+      time.sleep(0.00001)
+      GPIO.output(GPIO_TRIGGER, False)
+      begin = time.time()
+      while GPIO.input(GPIO_ECHO)==0 and time.time()<begin+0.05:
+            start = time.time()
+     
+      while GPIO.input(GPIO_ECHO)==1 and time.time()<begin+0.1:
+            stop = time.time()
+      elapsed = stop-start
+      distance = elapsed * 34000
+      distance = distance / 2
+     
+      print("Distance : ",distance)
+      return distance
+
+
+
+# Working with motors
+GPIO.setup(LEFT_M1, GPIO.OUT)
+GPIO.setup(LEFT_M2, GPIO.OUT)
+
+GPIO.setup(RIGHT_M1, GPIO.OUT)
+GPIO.setup(RIGHT_M2, GPIO.OUT)
+
+def forward():
+    GPIO.output(LEFT_M1, GPIO.LOW)
+    GPIO.output(LEFT_M2, GPIO.HIGH)
+    GPIO.output(RIGHT_M1, GPIO.LOW)
+    GPIO.output(RIGHT_M2, GPIO.HIGH)
+     
+def reverse():
+    GPIO.output(LEFT_M1, GPIO.HIGH)
+    GPIO.output(LEFT_M2, GPIO.LOW)
+    GPIO.output(RIGHT_M1, GPIO.HIGH)
+    GPIO.output(RIGHT_M2, GPIO.LOW)
+     
+def rightturn():
+    GPIO.output(LEFT_M1,GPIO.LOW)
+    GPIO.output(LEFT_M2,GPIO.HIGH)
+    GPIO.output(RIGHT_M1,GPIO.HIGH)
+    GPIO.output(RIGHT_M2,GPIO.LOW)
+     
+def leftturn():
+      GPIO.output(LEFT_M1,GPIO.HIGH)
+      GPIO.output(LEFT_M2,GPIO.LOW)
+      GPIO.output(RIGHT_M1,GPIO.LOW)
+      GPIO.output(RIGHT_M2,GPIO.HIGH)
+
+def stop():
+      GPIO.output(LEFT_M2,GPIO.LOW)
+      GPIO.output(LEFT_M1,GPIO.LOW)
+      GPIO.output(RIGHT_M2,GPIO.LOW)
+      GPIO.output(RIGHT_M1,GPIO.LOW)
+     
+
+
+
+
+
+
+
+#Image analysis work
+def segment_colour(frame):    #returns only the red colors in the frame
+    hsv_roi =  cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+
+    lower_yellow = np.array([11,85,199])
+    upper_yellow = np.array([179,255,255])
+
+    mask = cv2.inRange(hsv_roi, lower_yellow, upper_yellow)
+
+    # Doing to clear the white noises
+    kern_dilate = np.ones((8,8),np.uint8)
+    kern_erode  = np.ones((3,3),np.uint8)
+    
+    mask= cv2.erode(mask,kern_erode)      #Eroding
+    mask=cv2.dilate(mask,kern_dilate)     #Dilating
+    return mask
+
+
+def find_blob(blob): #returns the red colored circle
+    largest_contour=0
+    cont_index=0
+    contours, hierarchy = cv2.findContours(blob, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+    for idx, contour in enumerate(contours):
+        area=cv2.contourArea(contour)
+        if (area >largest_contour) :
+            largest_contour=area
+           
+            cont_index=idx
+                              
+    r=(0,0,2,2)
+    if len(contours) > 0:
+        r = cv2.boundingRect(contours[cont_index])
+       
+    return r,largest_contour
+
+
+def target_hist(frame):
+    hsv_img=cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+   
+    hist=cv2.calcHist([hsv_img],[0],None,[50],[0,255])
+    return hist
+
+#CAMERA CAPTURE
+#initialize the camera and grab a reference to the raw camera capture
+camera = PiCamera()
+camera.resolution = (160, 120)
+camera.framerate = 16
+rawCapture = PiRGBArray(camera, size=(160, 120))
+
+# allow the camera to warmup
+time.sleep(0.001)
+ 
+# capture frames from the camera
+for image in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+      #grab the raw NumPy array representing the image, then initialize the timestamp and occupied/unoccupied text
+      frame = image.array
+      frame=cv2.flip(frame,1)
+      # cv2.imshow('initiall image',frame)
+      global centre_x
+      global centre_y
+      centre_x=0.
+      centre_y=0.
+      hsv1 = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+      mask_red=segment_colour(frame)      #masking red the frame
+      loct,area=find_blob(mask_red)
+      x,y,w,h=loct
+      # cv2.imshow('masked image',mask_red)
+     
+      distanceR = sonar(TRIGGER_RIGHT,ECHO_RIGHT)
+      distanceL = sonar(TRIGGER_LEFT,ECHO_LEFT)
+      distanceC = sonar(TRIGGER_FRONT,ECHO_FRONT)
+      if (w*h) < 10:
+            found=0
+      else:
+            found=1
+            simg2 = cv2.rectangle(frame, (x,y), (x+w,y+h), 255,2)
+            centre_x=x+((w)/2)
+            centre_y=y+((h)/2)
+            cv2.circle(frame,(int(centre_x),int(centre_y)),3,(0,110,255),-1)
+            centre_x-=80
+            centre_y=6--centre_y
+            print(centre_x,centre_y)
+      initial=400
+      flag=0       
+      if(found==0):
+            #if the ball is not found and the last time it sees ball in which direction, it will start to rotate in that direction
+            if flag==0:
+                  rightturn()
+                  time.sleep(0.05)
+            else:
+                  leftturn()
+                  time.sleep(0.05)
+            stop()
+            time.sleep(0.0125)
+     
+      elif(found==1):
+            if(area<initial):
+                  if(distanceC<10):
+                        #if ball is too far but it detects something in front of it,then it avoid it and reaches the ball.
+                        if distanceR>=8:
+                              rightturn()
+                              time.sleep(0.00625)
+                              stop()
+                              time.sleep(0.0125)
+                              forward()
+                              time.sleep(0.00625)
+                              stop()
+                              time.sleep(0.0125)
+                              #while found==0:
+                              leftturn()
+                              time.sleep(0.00625)
+                        elif distanceL>=8:
+                              leftturn()
+                              time.sleep(0.00625)
+                              stop()
+                              time.sleep(0.0125)
+                              forward()
+                              time.sleep(0.00625)
+                              stop()
+                              time.sleep(0.0125)
+                              rightturn()
+                              time.sleep(0.00625)
+                              stop()
+                              time.sleep(0.0125)
+                        else:
+                              stop()
+                              time.sleep(0.01)
+                  else:
+                        forward()
+                        time.sleep(0.00625)
+            elif(area>=initial):
+                  initial2=6700
+                  if(area<initial2):
+                        if(distanceC>10):
+                              #it brings coordinates of ball to center of camera's imaginary axis.
+                              if(centre_x<=-20 or centre_x>=20):
+                                    if(centre_x<0):
+                                          flag=0
+                                          rightturn()
+                                          time.sleep(0.025)
+                                    elif(centre_x>0):
+                                          flag=1
+                                          leftturn()
+                                          time.sleep(0.025)
+                              forward()
+                              time.sleep(0.00003125)
+                              stop()
+                              time.sleep(0.00625)
+                        else:
+                              stop()
+                              time.sleep(0.01)
+
+                  else:
+                        time.sleep(0.1)
+                        stop()
+                        time.sleep(0.1)    
+      rawCapture.truncate(0)  # clear the stream in preparation for the next frame
+         
+      if(cv2.waitKey(1) & 0xff == ord('q')):
+            break
+
+GPIO.cleanup() #free all the GPIO pins
+```
 | **Quantity & Part Name** | **Part Description** | **Reference Designators** | **Cost** | **Link** |
 |:--:|:--:|:--:|:--:|:--|
 | 1 Screw Driver Kit | Included different screws & screw driver | N/A | $5.94 | https://www.amazon.com/Small-Screwdriver-Set-Mini-Magnetic/dp/B08RYXKJW9/ | 
