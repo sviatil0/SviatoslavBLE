@@ -106,7 +106,7 @@ In addition, it assigns the coordinate axis to all this system to make it use th
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/4FLv4QYLK8A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>{:target="_blank" rel="noopener"}
 
-![Project scheme](https://gdurl.com/x_eO)
+![Project scheme](https://gdurl.com/KLgM)
 | **Quantity & Part Name** | **Part Description** | **Reference Designators** | **Cost** | **Link** |
 |:--:|:--:|:--:|:--:|:--|
 | 1 Screw Driver Kit | Included different screws & screw driver | N/A | $5.94 | https://www.amazon.com/Small-Screwdriver-Set-Mini-Magnetic/dp/B08RYXKJW9/ | 
