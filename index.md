@@ -8,9 +8,8 @@ In this project I made a robot that is tracking the ball of the specific color.
 ![Headstone Image](https://gdurl.com/0gHQ)
 
 # Demo night presentation 
-<html>
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/KBhEHXrmlh8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</html>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/KBhEHXrmlh8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 # Final Milestone
 To sum up, I want to establish what I have now.
 1.	I studied image processing and applied it
